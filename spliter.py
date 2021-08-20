@@ -49,7 +49,6 @@ def createSpeedsCSVs():
                 break
     return
 
-createSpeedsCSVs()
 
         
 
