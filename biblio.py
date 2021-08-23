@@ -1,3 +1,4 @@
+from genericpath import exists
 import pandas as pd
 import os
 import pathlib
@@ -5,16 +6,13 @@ import csv
 
 def list_directory(relative_path):
     '''list the content of directory'''
-    path = f'{os.getcwd()}/{relative_path}'
-    datModels = os.listdir(path)
-
+    datModels = os.listdir(f'{os.getcwd()}/{relative_path}')
     return datModels
 
-def createModelsFolders(models):
-
+def createModelsFolders():
+    os.mkdir(f'{os.getcwd()}/models')
     for f in newMotorsList(dat=True):
-        path = f'{os.getcwd()}/models/{f}'
-        os.makedirs(path, exist_ok=True)
+        os.mkdir(f'{os.getcwd()}/models/{f}')
     return
 
 def newMotorsList(dat=False):
@@ -32,6 +30,7 @@ def newMotorsList(dat=False):
         motorsFolders = list_directory("models/")
 
     motorsFolders = list( set(motorsFolders) )
+
     return motorsFolders
 
 def createSpeedsCSVs():
@@ -48,6 +47,7 @@ def createSpeedsCSVs():
                     writer.writerows(tempHandler)
                 break
     return
+
 
 
         
