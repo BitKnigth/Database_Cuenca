@@ -3,19 +3,19 @@ import csv
 import biblio
 
 
-def unpack():
+def unpack(datModelsFolder = "datModels"):
 
     print("-> Creating models folders")
     try:
-        biblio.createModelsFolders()
+        biblio.createModelsFolders(datModelsFolder)
         print("-> Done.")
     except FileExistsError:
         print("\n-X error -> Models Folder already exists, unpacking .dat models.")
     
     print("\n-> Unpacking .dat models.")
-    biblio.createSpeedsCSVs()
+    biblio.createSpeedsCSVs(datModelsFolder)
     print("\n-> All .dat models succesfuly unpacked.")
 
     return 
 
-unpack()
+unpack("generic")

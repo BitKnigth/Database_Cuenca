@@ -1,7 +1,5 @@
 from genericpath import exists
-import pandas as pd
 import os
-import pathlib
 import csv
 
 def list_directory(relative_path):
@@ -9,16 +7,16 @@ def list_directory(relative_path):
     datModels = os.listdir(f'{os.getcwd()}/{relative_path}')
     return datModels
 
-def createModelsFolders():
+def createModelsFolders(datModelsFolderName):
     os.mkdir(f'{os.getcwd()}/models')
-    for f in newMotorsList(dat=True):
+    for f in newMotorsList(datModelsFolderName, dat=True):
         os.mkdir(f'{os.getcwd()}/models/{f}')
     return
 
-def newMotorsList(dat=False):
+def newMotorsList(datModelsFolderName, dat=False):
     '''Generate a list containing the avaliable models'''
     if dat:
-        motorsFolders = list_directory("datModels/")
+        motorsFolders = list_directory(datModelsFolderName)
         motorsFolders = [f.split("-") for f in motorsFolders]
         for i in range(len(motorsFolders)):
             if len(motorsFolders[i]) == 3:
@@ -33,18 +31,20 @@ def newMotorsList(dat=False):
 
     return motorsFolders
 
-def createSpeedsCSVs():
+def createSpeedsCSVs(datModelsFolderName):
     '''Create the individual speeds "*".csv for each motor'''
-    models = list_directory("datModels")
-    motors = newMotorsList(dat=True)
+    models = list_directory(datModelsFolderName)
+    motors = newMotorsList(datModelsFolderName, dat=True)
 
     for m in models:
-        tempHandler = open(f'{os.getcwd()}/datModels/{m}').read()
+        tempHandler = open(f'{os.getcwd()}/{datModelsFolderName}/{m}').readlines()
         for motor in motors:
             if m.startswith(motor):
-                with open(f'{os.getcwd()}/models/{motor}/{m[:-4]}.csv', 'w') as handler:
+                with open(f'{os.getcwd()}/models/{motor}/{m[:-4]}.csv', 'w', newline='') as handler:
                     writer = csv.writer(handler)
-                    writer.writerows(tempHandler)
+                    for row in tempHandler:
+                        row = [i.strip().split(',') for i in row] 
+                        writer.writerow(row)
                 break
     return
 
