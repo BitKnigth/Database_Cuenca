@@ -1,4 +1,3 @@
-from genericpath import exists
 import os
 import csv
 
@@ -38,12 +37,13 @@ def createSpeedsCSVs(datModelsFolderName):
 
     for m in models:
         tempHandler = open(f'{os.getcwd()}/{datModelsFolderName}/{m}').readlines()
+        del(tempHandler[0])
         for motor in motors:
             if m.startswith(motor):
                 with open(f'{os.getcwd()}/models/{motor}/{m[:-4]}.csv', 'w', newline='') as handler:
                     writer = csv.writer(handler)
                     for row in tempHandler:
-                        row = [i.strip().split(',') for i in row] 
+                        row = row.strip().split(',')
                         writer.writerow(row)
                 break
     return
