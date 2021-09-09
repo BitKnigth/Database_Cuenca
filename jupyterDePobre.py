@@ -60,4 +60,4 @@ def buildMatrix(model):
         
 
 #print(loadUtils.rawDataList(loadUtils.getModel("FanA", "Conf203", 60)))
-buildMatrix(loadUtils.rawDataList(loadUtils.getModel("FanA", "Conf203", 60)))
+print(buildMatrix(loadUtils.rawDataList(loadUtils.getModel("FanA", "Conf203", 60))))
