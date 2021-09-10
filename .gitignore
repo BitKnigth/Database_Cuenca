@@ -4,5 +4,5 @@ models
 loadutils.py
 jupyterDePobre.py
 personalgittoken.txt
-__pycache
+__pycache__
 .vscode
