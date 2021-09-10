@@ -1,8 +1,0 @@
-env
-models
-**.dat
-loadutils.py
-jupyterDePobre.py
-personalgittoken.txt
-__pycache__
-.vscode
