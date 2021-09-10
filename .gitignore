@@ -1,4 +1,8 @@
 env
 models
-datModels
-generic
+**.dat
+loadutils.py
+jupyterDePobre.py
+personalgittoken.txt
+__pycache
+.vscode

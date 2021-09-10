@@ -1,26 +1,27 @@
 import csv
 
-def getModel(motor,conf, speed):
+def getModelCsv(motor, conf, speed):
     csvFile = open(f'models/{motor}/{motor}-{conf}-{str(speed)}Sp.csv').readlines()
-    content = csv.reader(csvFile)
-    return content
+    modelCsv = csv.reader(csvFile)
+    return modelCsv 
 
-def rawDataList(model):
-    filteredContent = list()
-    for row in model:
+def modelRowsArray(modelCsv):
+    rowsArray = list()
+    for row in modelCsv:
         if row[0] == '':
             continue
         if row[0].startswith('Ang'):
-            filteredContent.append(row)
+            rowsArray.append(row)
             continue
         row = [float(i) for i in row]
-        filteredContent.append(row)
-    return filteredContent
+        rowsArray.append(row)
+    return rowsArray
 
-def buildMatrix(model):
-
+def buildMatrix(modelCsv):
+    
     # TODO - Implement the mapping function to the nominal frequencies { freq_array -> nomFreq_array}
     
+    model = modelRowsArray(modelCsv)
     # Initialize the lists 
     frequencies = list()
     angles = list()
