@@ -16,4 +16,4 @@ def unpack(datModelsFolder = "datModels"):
 
     return 
 
-unpack("generic")
+unpack()
