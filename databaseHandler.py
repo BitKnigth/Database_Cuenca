@@ -60,4 +60,40 @@ class Loader:
                 j += 1
 
         return matrix, frequencies, angles
-            
+
+class MotorsParameters:
+    paramsDict = dict()
+    Fanid = list()
+
+    paramsDict = {
+        "TotalPressure": [1.5, 1.5, 1.6, 1.5, 1.4, 1.6, 1.2, 1.2],
+        "MassFlow":      [430, 430, 415, 396, 396, 385, 396, 403],
+        "MT":            [1.04, 1.04, 1.39, 0.99, 0.99, 0.89, 0.67, 0.63],
+        "MTd":           [1.2, 1.2, 1.52, 1.12, 1.12, 1.14, 0.88, 0.87],
+        "V":             [90, 60, 60, 112, 112, 88, 50, 11],
+        "B":             [40, 26, 26, 53,  53, 36, 42, 15],
+        "BPF":           [2420, 1570, 2250, 3120, 3120, 2180, 1670, 556],
+        "Cutoff":        [0.83, 0.8, 0, 0.89, 0.89, 0.68, 3.53, 2.38],
+        "RSS":           [200, 200, 200, 367, 367, 227, 400, 200]
+        }
+
+    Fanid =['FanA','FanB','FanC','FanQF-1','FanQF-3','FanQF-5','FanQF-6','FanQF-9']
+
+    def __init__(self, motor = None):
+        if motor:
+            return self.singleMotor(motor)
+        pass
+
+    @staticmethod
+    def motorsParametersdict():
+        MotorsParameters.motorsParameters = dict()
+        for motor in MotorsParameters.Fanid:
+            MotorsParameters.motorsParameters[motor] = MotorsParameters.singleMotor(motor)
+        return MotorsParameters.motorsParameters
+
+    @staticmethod
+    def singleMotor(motor):
+        motorParam = dict()
+        for param, values in MotorsParameters.paramsDict.items():
+            motorParam[param] = values[MotorsParameters.Fanid.index(motor)]
+        return motorParam
