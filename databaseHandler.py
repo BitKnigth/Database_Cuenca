@@ -9,21 +9,40 @@ class Loader:
         self.modelCsv = self.getModelCsv()
         pass
 
+    def rawToNominal(self, freq):
+        nomFreq = [50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000, 6300, 8000, 10000, 12500, 16000, 20000]
+        mappedFreq = list()
+        for f in freq:
+            distance = [(f - i)**2 for i in nomFreq]
+            index_min = distance.index(min(distance))
+            mappedFreq.append(nomFreq[index_min])
+        return mappedFreq
+
     def getModelCsv(self):
         csvFile = open(f'models/{self.motor}/{self.motor}-{self.conf}-{str(self.speed)}Sp.csv').readlines()
         modelCsv = csv.reader(csvFile)
         return modelCsv 
 
-    def modelRowsArray(self):
+    def modelRowsArray(self, speed=False, inLineAG = False):
+        
         rowsArray = list()
         for row in self.modelCsv:
             if row[0] == '':
                 continue
             if row[0].startswith('Ang'):
-                rowsArray.append(row)
+                angle = row[0]
+                if not inLineAG:
+                    rowsArray.append(row)
                 continue
-            row = [float(i) for i in row]
-            rowsArray.append(row)
+
+            tmp = list()
+            if speed:
+                tmp.append(self.speed)
+            if inLineAG:
+                tmp.append(angle)
+            tmp += [float(i) for i in row]
+            rowsArray.append(tmp)
+
         return rowsArray
 
     def buildMatrix(self):
@@ -46,7 +65,6 @@ class Loader:
                     first2 = True # Says that actually it is the first angle set
                     first = False # Now on, it will be not the first time it passes by a angle set
                 j = 0 # index for iterating by the matrix, reset on each pass by a "Angle XX"
-
                 angles.append(rowsArray[i][0]) # Add the angle to the angle list
 
             else: # If the ponter is on a Frequencie:Data pair
@@ -64,7 +82,7 @@ class Loader:
 class MotorsParameters:
     paramsDict = dict()
     Fanid = list()
-
+    # Transform the paramsDict in a params.json file or a class (easy to change)
     paramsDict = {
         "TotalPressure": [1.5, 1.5, 1.6, 1.5, 1.4, 1.6, 1.2, 1.2],
         "MassFlow":      [430, 430, 415, 396, 396, 385, 396, 403],
