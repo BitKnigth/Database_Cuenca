@@ -17,15 +17,6 @@ class Loader:
         index_min = distance.index(min(distance))
         return nomFreq[index_min]
 
-    def rawToNominal(self, freq):
-        nomFreq = [50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000, 6300, 8000, 10000, 12500, 16000, 20000]
-        mappedFreq = list()
-        for f in freq:
-            distance = [(f - i)**2 for i in nomFreq]
-            index_min = distance.index(min(distance))
-            mappedFreq.append(nomFreq[index_min])
-        return mappedFreq
-
     def getModelCsv(self):
         csvFile = open(f'models/{self.motor}/{self.motor}-{self.conf}-{str(self.speed)}Sp.csv').readlines()
         modelCsv = csv.reader(csvFile)
@@ -48,14 +39,14 @@ class Loader:
                 tmp.append(self.speed)
             if inLineAG:
                 tmp.append(angle)
-            tmp += [float(i) for i in row]
+            aux = [float(i) for i in row]
+            aux[0] = self.mapToNominal(aux[0])
+            tmp += aux
             rowsArray.append(tmp)
 
         return rowsArray
 
     def buildMatrix(self):
-        
-        # TODO - Implement the mapping function to the nominal frequencies { freq_array -> nomFreq_array}
         
         rowsArray = self.modelRowsArray()
         # Initialize the lists 
