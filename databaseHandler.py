@@ -1,4 +1,5 @@
 import csv
+from os import stat
 
 class Loader:
 
@@ -8,6 +9,13 @@ class Loader:
         self.speed = speed
         self.modelCsv = self.getModelCsv()
         pass
+
+    @staticmethod
+    def mapToNominal(freq):
+        nomFreq = [50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000, 6300, 8000, 10000, 12500, 16000, 20000]
+        distance = [(freq - i)**2 for i in nomFreq]
+        index_min = distance.index(min(distance))
+        return nomFreq[index_min]
 
     def rawToNominal(self, freq):
         nomFreq = [50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000, 6300, 8000, 10000, 12500, 16000, 20000]
