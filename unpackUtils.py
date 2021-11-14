@@ -12,7 +12,7 @@ def createModelsFolders(datModelsFolderName):
         os.mkdir(f'{os.getcwd()}/models/{f}')
     return
 
-def newMotorsList(datModelsFolderName, dat=False):
+def newMotorsList(datModelsFolderName=None, dat=False):
     '''Generate a list containing the avaliable models'''
     if dat:
         motorsFolders = list_directory(datModelsFolderName)
@@ -40,7 +40,14 @@ def createSpeedsCSVs(datModelsFolderName):
         del(tempHandler[0])
         for motor in motors:
             if m.startswith(motor):
-                with open(f'{os.getcwd()}/models/{motor}/{m[:-4]}.csv', 'w', newline='') as handler:
+                aux = m.split('-')
+                if len(aux) == 4:
+                    path = f'{os.getcwd()}/models/{motor}/{aux[0] +"-"+ aux[1] +"-"+ aux[3][:-4].lower()}'
+                elif len(aux) == 3:
+                    path = f'{os.getcwd()}/models/{motor}/{aux[0] +"-"+ aux[2][:-4].lower()}'
+                else:
+                    raise Exception("invalid model: " + m)
+                with open(path + '.csv', 'w', newline='') as handler:
                     writer = csv.writer(handler)
                     for row in tempHandler:
                         row = row.strip().split(',')

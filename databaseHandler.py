@@ -1,11 +1,14 @@
 import csv
+from typing import Iterable
+
+from unpackUtils import newMotorsList
 from os import stat
 
 class Loader:
-
-    def __init__(self, motor, conf, speed):
+    
+    modelCsv = None
+    def __init__(self, motor, speed):
         self.motor = motor
-        self.conf = conf
         self.speed = speed
         self.modelCsv = self.getModelCsv()
         pass
@@ -15,20 +18,36 @@ class Loader:
         nomFreq = [50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000, 6300, 8000, 10000, 12500, 16000, 20000]
         distance = [(freq - i)**2 for i in nomFreq]
         index_min = distance.index(min(distance))
+
         return nomFreq[index_min]
 
+    @staticmethod
+    def allMotors(speed=None, inLineAg=False):
+        iterableLoaderInstance = iterableLoader(speed)
+        motorsRowsArray = []
+        for model in newMotorsList():
+            iterableLoaderInstance.motor = model
+            iterableLoaderInstance.modelCsv = iterableLoaderInstance.getModelCsv()
+            motorsRowsArray += iterableLoaderInstance.modelRowsArray()
+            
+        return motorsRowsArray
+
     def getModelCsv(self):
-        csvFile = open(f'models/{self.motor}/{self.motor}-{self.conf}-{str(self.speed)}Sp.csv').readlines()
+        csvFile = open(f'models/{self.motor}/{self.motor}-{str(self.speed)}sp.csv').readlines()
         modelCsv = csv.reader(csvFile)
+
         return modelCsv 
 
-    def modelRowsArray(self, speed=False, inLineAG = False):
+    def modelRowsArray(self, speed=False, inLineAG=False):
         
         rowsArray = list()
         for row in self.modelCsv:
             if row[0] == '':
                 continue
             if row[0].startswith('Ang'):
+                " TODO: Implement regex logic to now if a name is a str but with wrong typo"
+                " TODO: Implement logic on the caller function, to jump this model in case of exception."
+                
                 angle = row[0]
                 if not inLineAG:
                     rowsArray.append(row)
@@ -62,7 +81,7 @@ class Loader:
                 first2 = False # Tells the program that he's not in the first angle set
                 if first: # If it is the first time that it pass by a angle set
                     first2 = True # Says that actually it is the first angle set
-                    first = False # Now on, it will be not the first time it passes by a angle set
+                    first = False # From now on, it will be not the first time it passes by a angle set
                 j = 0 # index for iterating by the matrix, reset on each pass by a "Angle XX"
                 angles.append(rowsArray[i][0]) # Add the angle to the angle list
 
@@ -114,3 +133,11 @@ class MotorsParameters:
         for param, values in MotorsParameters.paramsDict.items():
             motorParam[param] = values[MotorsParameters.Fanid.index(motor)]
         return motorParam
+
+
+class iterableLoader(Loader):
+    def __init__(self, speed):
+        if speed: 
+            self.speed = speed
+        else:
+            raise Exception("speed parameter not informed")

@@ -1,7 +1,7 @@
 import csv
 
-def getModelCsv(motor, conf, speed):
-    csvFile = open(f'models/{motor}/{motor}-{conf}-{str(speed)}Sp.csv').readlines()
+def getModelCsv(motor, speed):
+    csvFile = open(f'models/{motor}/{motor}-{str(speed)}Sp.csv').readlines()
     modelCsv = csv.reader(csvFile)
     return modelCsv 
 
