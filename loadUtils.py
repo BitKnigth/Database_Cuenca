@@ -1,4 +1,5 @@
 import csv
+from unpackDat import unpack
 
 def getModelCsv(motor, speed):
     csvFile = open(f'models/{motor}/{motor}-{str(speed)}Sp.csv').readlines()

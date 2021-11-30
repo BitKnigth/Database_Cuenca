@@ -1,4 +1,4 @@
-import unpackUtils
+from . import unpackUtils
 
 
 def unpack(datModelsFolder = "datModels"):
@@ -15,5 +15,3 @@ def unpack(datModelsFolder = "datModels"):
     print("\n-> All .dat models succesfuly unpacked.")
 
     return 
-
-unpack()

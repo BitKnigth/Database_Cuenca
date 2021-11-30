@@ -1,7 +1,7 @@
 import os
 import csv
 
-def list_directory(relative_path):
+def listDirectory(relative_path):
     '''list the content of directory'''
     datModels = os.listdir(f'{os.getcwd()}/{relative_path}')
     return datModels
@@ -15,7 +15,7 @@ def createModelsFolders(datModelsFolderName):
 def newMotorsList(datModelsFolderName=None, dat=False):
     '''Generate a list containing the avaliable models'''
     if dat:
-        motorsFolders = list_directory(datModelsFolderName)
+        motorsFolders = listDirectory(datModelsFolderName)
         motorsFolders = [f.split("-") for f in motorsFolders]
         for i in range(len(motorsFolders)):
             if len(motorsFolders[i]) == 3:
@@ -24,7 +24,7 @@ def newMotorsList(datModelsFolderName=None, dat=False):
                 motorsFolders[i] = motorsFolders[i][0] + '-' + motorsFolders[i][1]
             # TO DO -> Implement a raiseException("Invalid dat file.")
     else:
-        motorsFolders = list_directory("models/")
+        motorsFolders = listDirectory("models/")
 
     motorsFolders = list( set(motorsFolders) )
 
@@ -32,7 +32,7 @@ def newMotorsList(datModelsFolderName=None, dat=False):
 
 def createSpeedsCSVs(datModelsFolderName):
     '''Create the individual speeds "*".csv for each motor'''
-    models = list_directory(datModelsFolderName)
+    models = listDirectory(datModelsFolderName)
     motors = newMotorsList(datModelsFolderName, dat=True)
 
     for m in models:

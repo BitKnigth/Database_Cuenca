@@ -1,7 +1,8 @@
 import csv
 from typing import Iterable
 
-from unpackUtils import newMotorsList
+from .unpackDat import unpack
+from .unpackUtils import newMotorsList, listDirectory
 from os import stat
 
 class Loader:
@@ -33,6 +34,13 @@ class Loader:
         return motorsRowsArray
 
     def getModelCsv(self):
+        if "models" not in listDirectory(''):
+            resposta = input("ERRO => Pasta 'models' contendo os modelos no formato .csv não encontrado.\n\
+                   SOLUTION => Deseja desempacotar os arquivos .dat em datModels? [Y/n]")
+            if resposta.lower() == 'y':
+                unpack()
+            else:
+                raise Exception("Não foi possível acessar os modelos .csv")   
         csvFile = open(f'models/{self.motor}/{self.motor}-{str(self.speed)}sp.csv').readlines()
         modelCsv = csv.reader(csvFile)
 
@@ -96,6 +104,7 @@ class Loader:
                 j += 1
 
         return matrix, frequencies, angles
+
 
 class MotorsParameters:
     paramsDict = dict()
