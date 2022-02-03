@@ -1,7 +1,6 @@
 import csv
 from typing import Iterable
 
-from .unpackDat import unpack
 from .unpackUtils import newMotorsList, listDirectory
 from os import stat
 
@@ -10,7 +9,7 @@ class Loader:
     modelCsv = None
     def __init__(self, motor, speed):
         self.motor = motor
-        self.speed = speed
+        self.speed = str(speed)
         self.modelCsv = self.getModelCsv()
         pass
 
@@ -23,30 +22,22 @@ class Loader:
         return nomFreq[index_min]
 
     @staticmethod
-    def allMotors(speed=None, inLineAg=False):
+    def allMotors(speed, inLineSpeed=False, inLineAG=False):
         iterableLoaderInstance = iterableLoader(speed)
         motorsRowsArray = []
         for model in newMotorsList():
             iterableLoaderInstance.motor = model
             iterableLoaderInstance.modelCsv = iterableLoaderInstance.getModelCsv()
-            motorsRowsArray += iterableLoaderInstance.modelRowsArray()
+            motorsRowsArray += iterableLoaderInstance.modelRowsArray(inLineSpeed=inLineSpeed, inLineAG=inLineAG)
             
         return motorsRowsArray
 
     def getModelCsv(self):
-        if "models" not in listDirectory(''):
-            resposta = input("ERRO => Pasta 'models' contendo os modelos no formato .csv não encontrado.\n\
-                   SOLUTION => Deseja desempacotar os arquivos .dat em datModels? [Y/n]")
-            if resposta.lower() == 'y':
-                unpack()
-            else:
-                raise Exception("Não foi possível acessar os modelos .csv")   
-        csvFile = open(f'models/{self.motor}/{self.motor}-{str(self.speed)}sp.csv').readlines()
+        csvFile = open(f'HeidmannDataHandler/models/{self.motor}/{self.motor}-{str(self.speed)}sp.csv').readlines()
         modelCsv = csv.reader(csvFile)
-
         return modelCsv 
 
-    def modelRowsArray(self, speed=False, inLineAG=False):
+    def modelRowsArray(self, inLineSpeed=False, inLineAG=False):
         
         rowsArray = list()
         for row in self.modelCsv:
@@ -62,10 +53,10 @@ class Loader:
                 continue
 
             tmp = list()
-            if speed:
-                tmp.append(self.speed)
+            if inLineSpeed:
+                tmp.append(int(self.speed))
             if inLineAG:
-                tmp.append(angle)
+                tmp.append(int(angle[3:]))
             aux = [float(i) for i in row]
             aux[0] = self.mapToNominal(aux[0])
             tmp += aux
@@ -91,7 +82,7 @@ class Loader:
                     first2 = True # Says that actually it is the first angle set
                     first = False # From now on, it will be not the first time it passes by a angle set
                 j = 0 # index for iterating by the matrix, reset on each pass by a "Angle XX"
-                angles.append(rowsArray[i][0]) # Add the angle to the angle list
+                angles.append(int(rowsArray[i][0][3:])) # Add the angle to the angle list
 
             else: # If the ponter is on a Frequencie:Data pair
                 # If it is the first angle set, initialize the rows of the matrix 
@@ -147,6 +138,6 @@ class MotorsParameters:
 class iterableLoader(Loader):
     def __init__(self, speed):
         if speed: 
-            self.speed = speed
+            self.speed = str(speed)
         else:
             raise Exception("speed parameter not informed")
